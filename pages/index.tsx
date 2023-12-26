@@ -22,7 +22,6 @@ export default function Home() {
       <div>
         <p className='lg:text-5xl md:text-5xl text-3xl pt-4 text-black font-bold text-center'>Our products</p>
         <div className=''>
-
         </div>
         <UseCaseCards/>
       </div>

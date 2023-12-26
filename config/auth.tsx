@@ -1,7 +1,7 @@
 import {createContext, useContext, useEffect, useState} from 'react'
 import {createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile} from 'firebase/auth'
 import { app, auth } from './firebase'
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref } from 'firebase/storage';
 
 //context is like a prop that can be used by all component without the need to pass it
@@ -138,7 +138,24 @@ export const AuthContextProvider = ({children}: {children:React.ReactNode}) => {
 
     const createEmailHistory = async(data:any,userId:any) => {
         const dbRef = doc(db, "email history", userId );
-        return setDoc(dbRef,data)
+        const docSnap = await getDoc(dbRef)
+        if(docSnap.exists()){
+            const prevHistory = docSnap.data()?.history || []
+            const updatedHistory = [...prevHistory,data]
+            return updateDoc(dbRef,{history:updatedHistory})
+        }
+        else{
+            return setDoc(dbRef,{
+                history:arrayUnion(data)
+            })
+        }
+    }
+
+    const getEmailHistory = async (userId:any) => {
+        const dbRef = doc(db, "email history", userId );
+        const docSnap = await getDoc(dbRef);
+        const data =  docSnap.data();
+        return data
     }
 
     const getBlogData = async (Blogtype:any,) => {
@@ -170,6 +187,28 @@ export const AuthContextProvider = ({children}: {children:React.ReactNode}) => {
         return ids
     }
 
+    const createBlogHistory = async(data:any,userId:any) => {
+        const dbRef = doc(db, "blog history", userId );
+        const docSnap = await getDoc(dbRef)
+        if(docSnap.exists()){
+            const prevHistory = docSnap.data()?.history || []
+            const updatedHistory = [...prevHistory,data]
+            return updateDoc(dbRef,{history:updatedHistory})
+        }
+        else{
+            return setDoc(dbRef,{
+                history:arrayUnion(data)
+            })
+        }
+    }
+
+    const getBlogHistory = async (userId:any) => {
+        const dbRef = doc(db, "blog history", userId );
+        const docSnap = await getDoc(dbRef);
+        const data =  docSnap.data();
+        return data
+    }
+
     return (
         <AuthContext.Provider  value={
             {
@@ -178,8 +217,8 @@ export const AuthContextProvider = ({children}: {children:React.ReactNode}) => {
                 addUsers,editUser,
                 getUserData,getUseCaseData,
                 getData,
-                getEmailData,getEmailTypes,createEmailHistory,
-                getBlogData,getBlogTypes,
+                getEmailData,getEmailTypes,createEmailHistory,getEmailHistory,
+                getBlogData,getBlogTypes,createBlogHistory,getBlogHistory
             }}>
             {loading ? null : children}
         </AuthContext.Provider>

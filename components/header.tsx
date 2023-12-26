@@ -30,7 +30,7 @@ const Navbar = () => {
             <div className='flex flex-row'>
                 <Logo/>
                 <div  className={`lg:flex md:flex hidden flex-row items-center`}>
-                    <div className='text-xl text-white mx-3 '><Link href={'/about'}>Use cases</Link></div>
+                    <div className='text-xl text-white mx-3 '><Link href={'/useCases'}>Use cases</Link></div>
                     <div className='text-xl text-white mx-3 '><Link href={'/contact'}>Resouce</Link></div>
                 </div>
             </div>
@@ -64,7 +64,7 @@ const Navbar = () => {
       {/*Mobile view*/}
       
       {menu &&
-        <div className='lg:hidden md:hidden flex flex-col absolute text-right bg-black bg-opacity-75 w-full  items-end top-auto right-0'>
+        <div className='lg:hidden md:hidden flex flex-col z-10 absolute text-right bg-black bg-opacity-75 w-full   items-end top-auto right-0'>
           <div className='py-4'>
             {user && 
               <div className='flex flex-col items-end'>

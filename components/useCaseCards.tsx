@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import {Card, CardHeader, CardBody} from "@nextui-org/react";
 import img from '../public/email.jpg'
@@ -11,10 +11,15 @@ const UseCaseCards = () => {
   const {getUseCaseData} = useAuth()
   const [data,setData] = useState<any>()
   const [loading,setLoading] = useState(false)
-  getUseCaseData().then((e:any) => {
-    setData(e)
-    setLoading(true)
-  });
+  useEffect(() => {
+    console.log("Inside useCase")
+    getUseCaseData().then((e:any) => {
+      setData(e)
+      setLoading(true)
+    }).catch((error:any) => {
+      console.error('Error fetching use case data:', error);
+    });
+  }, [getUseCaseData]);
   if(loading){
     return (
       <>
@@ -44,7 +49,10 @@ const UseCaseCards = () => {
   }
   else{
     return (
-      <></>
+      <div className='p-6'>
+        <div>Oops!</div>
+        <div>We are facing an issue currently. Please try again later</div>
+      </div>
     )
   }
 }

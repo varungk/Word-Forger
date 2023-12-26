@@ -26,6 +26,7 @@ export default async function createMessage(
     });
 
     const data = await response.json();
+    console.log("The data we get is: ",data)
     const result = data.choices[0].message.content;
 
     // Send the result back as the response to the API calling position

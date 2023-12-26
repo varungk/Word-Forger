@@ -6,7 +6,7 @@ export default async function createMessage(
 ) {
   const { messages } = req.body;
   console.log(messages);
-  const apiKey = "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";
+  const apiKey = "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";
   const url = 'https://api.openai.com/v1/chat/completions';
 
   const body = JSON.stringify({
@@ -15,6 +15,7 @@ export default async function createMessage(
     stream: false,
   });
 
+  console.log("from api: ",body)
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -26,6 +27,7 @@ export default async function createMessage(
     });
 
     const data = await response.json();
+    console.log("This is the data we get back",data)
     const result = data.choices[0].message.content;
 
     // Send the result back as the response to the API calling position

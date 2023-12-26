@@ -22,11 +22,15 @@ const data = [
     { date: 1234567890 } // Sample number (timestamp)
 ];
 
-const Create = () => {
-    const { user, getEmailData, getEmailTypes,getData,createEmailHistory } = useAuth();
+const Email = () => {
+    const { user, getEmailData, getEmailTypes,getData,createEmailHistory,getEmailHistory } = useAuth();
     const [emailType, setEmailType] = useState<string[]>([]);
     const [finalResult,setfinalResult] = useState<any>();
     const [loading,setLoading] = useState(false)
+    const [historyData,setHistoryData] = useState<any>()
+    const [historyTabClicked,setHistoryTabClicked] = useState(true)
+    const [noOfgetEmail,setNoOfgetEmail] = useState(true)
+    const [selectEmailTypeClicked,setSelectEmailTypeClicked] = useState(false)
     const [selectedEmailType, setSelectedEmailType] = useState<string>('');
     const [formData, setFormData] = useState<Array<{ [key: string]: string[] | string }>>([]);
     const [commonData, setCommonData] = useState<Array<{ [key: string]: string[] | string }>>([]);
@@ -34,13 +38,25 @@ const Create = () => {
     useEffect(() => {
         if (!user) return;
         
-        getEmailTypes().then((result: string[]) => {
-            setEmailType(result);
-        });
+        if(noOfgetEmail){
+            getEmailTypes().then((result: string[]) => {
+                setEmailType(result);
+                setNoOfgetEmail(false)
+            });
+        }
         if(finalResult != null){
             setLoading(false)
         }
-    }, [getEmailTypes, user,setLoading,finalResult]);
+        if(historyTabClicked == true){
+            console.log("history tab clicked")
+            getEmailHistory(user.uid).then((result: any) => {
+                if(result){
+                    setHistoryData(result.history);
+                    setHistoryTabClicked(false)
+                }
+            });
+        }
+    }, [getEmailTypes,noOfgetEmail, user,setLoading,finalResult,getEmailHistory,historyData,historyTabClicked]);
 
     useEffect(() => {
         if (!selectedEmailType) return;
@@ -48,6 +64,7 @@ const Create = () => {
         getEmailData(selectedEmailType).then((result: any) => {
             setFormData(result);
         });
+        console.log("gerr")
         getData().then((result: any) => {
             setCommonData(result);
         });
@@ -92,8 +109,14 @@ const Create = () => {
         setSelectedEmailType(e.target.value);
     };
 
+    const displayHistory = (data:string) =>{
+        setfinalResult(data)
+    }
+
     const onSubmit = async (values: any) => {
+        console.log("Button clicked")
         setLoading(true)
+        setHistoryTabClicked(true)
         let prompt = `Act as Professional Email Writer, and give me the email message with subject & message for the following context:\nType:${selectedEmailType}`;
         for(var i in values){
             const j = "\n"+i+":"+values[i]
@@ -103,12 +126,14 @@ const Create = () => {
         var messages = [temp]
         var data = await apicall(messages)
         console.log(data.result)
-        const hisData = {
-            "input":values,
-            "response":data.result,
+        if(data.result){
+            const hisData = {
+                "input":values,
+                "response":data.result,
+            }
+            createEmailHistory(hisData,user.uid)
+            setfinalResult(data.result)
         }
-        createEmailHistory(hisData,user.uid)
-        setfinalResult(data.result)
         console.log(finalResult)
         
     };
@@ -132,8 +157,8 @@ const Create = () => {
     return (
         <>
             {user ? (
-                <div className='flex items-center'>
-                    <div className='w-2/5 bg-gray-300 p-5 pt-10 max-h-[520px] min-h-[520px] overflow-auto whitespace-normal'>
+                <div className='flex lg:flex-row md:flex-col flex-col'>
+                    <div className='lg:w-2/5 md:w-full w-full bg-gray-300 p-5 pt-10 lg:max-h-[940px] lg:min-h-[940px] md:h-auto h-auto overflow-auto whitespace-normal'>
                         <Tabs variant={"light"} aria-label="Tabs variants">
                             <Tab title="Input">
                                 <Formik initialValues={initialValues} validationSchema={Yup.object(validationSchema)} onSubmit={onSubmit} enableReinitialize>
@@ -282,15 +307,40 @@ const Create = () => {
                             </Tab>
                             <Tab title="History">
                                 <div>
-                                    History
+                                    {historyData ? (
+                                    <div className='grid grid-cols-1 gap-3'>
+                                        {historyData.map((result:any, index:number) => (
+                                        <div key={index}>
+                                            <button onClick={() => displayHistory(result.response)} className='max-w-[95%] min-w-[95%] h-10 text-left border rounded-md p-4 pb-10 bg-gray-300 hover:bg-gray-400 overflow-hidden whitespace-nowrap truncate'>
+                                            {result.input.Reason}
+                                            </button> 
+                                        </div>
+                                        ))}
+                                    </div>
+                                    ) : (
+                                    <div>No history to show</div>
+                                    )}
                                 </div>
                             </Tab>
                         </Tabs>
                     </div>
-                    <div className='w-3/5 p-3 max-h-[520px] overflow-auto whitespace-normal'>
-                        {finalResult &&
-                            <div dangerouslySetInnerHTML={{ __html: finalResult.replace(/\n/g, '<br />') }} />
-                        }
+                    <div className='lg:w-3/5 md:w-full w-full p-3 lg:max-h-[520px] md:h-auto h-auto overflow-auto whitespace-normal'>
+
+                        {finalResult ?
+                            (<div dangerouslySetInnerHTML={{ __html: finalResult.replace(/\n/g, '<br />') }} />)
+                        :(
+                            <div>
+                                {loading ? 
+                                    (
+                                        <div>Wait while we forge your content</div>
+                                    )
+                                :
+                                    (
+                                        <div className='md:text-3xl text-lg lg:pt-60 md:py-28 py-20 text-center'>Fill in the fields to start the forge!</div>
+                                    )
+                                }
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : (
@@ -300,4 +350,4 @@ const Create = () => {
     );
 };
 
-export default Create;
+export default Email;
