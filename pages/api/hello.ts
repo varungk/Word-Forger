@@ -5,9 +5,12 @@ type Data = {
   name: string
 }
 
-export default function handler(
+export default function hello(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  console.log("inside hello.ts")
+  const { messages } = req.body
+  console.log(messages)
   res.status(200).json({ name: 'John Doe' })
 }
