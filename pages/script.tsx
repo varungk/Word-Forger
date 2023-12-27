@@ -8,8 +8,6 @@ import router from 'next/router';
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
-import handler from './api/email';
-import EmailReq from './api/email';
 import  ChatCompletionRequestMessage from 'openai'
 import { sendMessage } from '@/config/emailConfig';
 
@@ -115,7 +113,7 @@ const Blog = () => {
     const onSubmit = async (values: any) => {
         console.log("Button clicked")
         setLoading(true)
-        setHistoryTabClicked(true)
+        // setHistoryTabClicked(true)
         let prompt = `Act as Professional Script Writer, and give a script for the following context:\nType:${selectedScriptType}`;
         for(var i in values){
             const j = "\n"+i+":"+values[i]
@@ -139,7 +137,7 @@ const Blog = () => {
 
     const apicall = async(messages:any)=>{
         try {
-            const response = await fetch('/api/script', {
+            const response = await fetch('/api/openApi', {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',

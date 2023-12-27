@@ -8,8 +8,6 @@ import router from 'next/router';
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
-import handler from './api/email';
-import EmailReq from './api/email';
 import  ChatCompletionRequestMessage from 'openai'
 import { sendMessage } from '@/config/emailConfig';
 
@@ -139,7 +137,7 @@ const Blog = () => {
 
     const apicall = async(messages:any)=>{
         try {
-            const response = await fetch('/api/blog', {
+            const response = await fetch('/api/openApi', {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
