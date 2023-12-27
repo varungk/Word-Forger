@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import router from 'next/router';
 import { Input, Select, SelectItem, Textarea } from '@nextui-org/react';
 import { ErrorMessage, Field, Form, Formik, FormikHandlers } from 'formik';
-import { createSchema } from './schema/create';
+import  createSchema  from '../components/schema/create';
 
 interface createTypes{
     lang:string,

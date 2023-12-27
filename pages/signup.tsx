@@ -3,7 +3,7 @@ import React from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/config/auth'
 import { useRouter } from 'next/router'
-import { signUpSchema } from './schema/signup'
+import  signUpSchema  from '../components/schema/signup'
 
 interface signUpTypes{
     name:string,

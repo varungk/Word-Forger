@@ -1,6 +1,6 @@
 import * as yup from "yup"
 
-export const createSchema = yup.object({
+const createSchema = yup.object({
     lang:yup.string().required("Required"),
     tone:yup.string().required("Required"),
     desc:yup.string().max(200,"Max of 200 characters").required("Required"),
@@ -8,3 +8,5 @@ export const createSchema = yup.object({
     creativity:yup.string().required("Required"),
     variants:yup.string().required("Required"),
 })
+
+export default createSchema

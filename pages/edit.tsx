@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
-import { editSchema } from './schema/edit'
+import  editSchema  from '../components/schema/edit'
 import { useAuth } from '@/config/auth'
 import {Button, Image, Progress, Spinner, Tooltip} from "@nextui-org/react";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';

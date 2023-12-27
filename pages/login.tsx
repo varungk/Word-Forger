@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Field, Formik, Form, ErrorMessage } from 'formik'
 import Link from 'next/link'
-import { loginSchema } from './schema/login'
+import  loginSchema  from '../components/schema/login'
 import { useAuth } from '@/config/auth'
 import { useRouter } from 'next/router'
 
