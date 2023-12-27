@@ -139,7 +139,7 @@ const Blog = () => {
 
     const apicall = async(messages:any)=>{
         try {
-            const response = await fetch('/api/email', {
+            const response = await fetch('/api/blog', {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',

@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { env } from 'process';
 
 export default async function createMessage(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { messages } = req.body;
-  console.log(messages);
-  const apiKey = "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";
+  console.log(process.env.API_KEY);
+  const apiKey = env.API_KEY;
   const url = 'https://api.openai.com/v1/chat/completions';
 
   const body = JSON.stringify({

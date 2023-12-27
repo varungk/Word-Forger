@@ -209,6 +209,57 @@ export const AuthContextProvider = ({children}: {children:React.ReactNode}) => {
         return data
     }
 
+    const getScriptData = async (ScriptType:any,) => {
+        const docRef = doc(db, "script writer", ScriptType);
+        try {
+            const docSnap = await getDoc(docRef);
+            
+            const data =  docSnap.data();
+            let dataArr: any[] = []
+            for(var key in data){
+                let obj:any = {}
+                obj[key] = data[key];
+                dataArr.push(obj)
+            }
+            console.log(dataArr)
+            return dataArr
+        } catch(error) {
+            console.log(error)
+        }
+    }
+
+    const getScriptTypes = async() => {
+        let ids:any[] = []
+        const querySnapshot = await getDocs(collection(db, "script writer"));
+        querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        ids.push(doc.id)
+        });
+        return ids
+    }
+
+    const createScriptHistory = async(data:any,userId:any) => {
+        const dbRef = doc(db, "script history", userId );
+        const docSnap = await getDoc(dbRef)
+        if(docSnap.exists()){
+            const prevHistory = docSnap.data()?.history || []
+            const updatedHistory = [...prevHistory,data]
+            return updateDoc(dbRef,{history:updatedHistory})
+        }
+        else{
+            return setDoc(dbRef,{
+                history:arrayUnion(data)
+            })
+        }
+    }
+
+    const getScriptHistory = async (userId:any) => {
+        const dbRef = doc(db, "script history", userId );
+        const docSnap = await getDoc(dbRef);
+        const data =  docSnap.data();
+        return data
+    }
+
     return (
         <AuthContext.Provider  value={
             {
@@ -218,7 +269,8 @@ export const AuthContextProvider = ({children}: {children:React.ReactNode}) => {
                 getUserData,getUseCaseData,
                 getData,
                 getEmailData,getEmailTypes,createEmailHistory,getEmailHistory,
-                getBlogData,getBlogTypes,createBlogHistory,getBlogHistory
+                getBlogData,getBlogTypes,createBlogHistory,getBlogHistory,
+                getScriptData,getScriptTypes,createScriptHistory,getScriptHistory,
             }}>
             {loading ? null : children}
         </AuthContext.Provider>
