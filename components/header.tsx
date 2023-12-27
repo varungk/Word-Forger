@@ -31,7 +31,6 @@ const Navbar = () => {
                 <Logo/>
                 <div  className={`lg:flex md:flex hidden flex-row items-center`}>
                     <div className='text-xl text-white mx-3 '><Link href={'/useCases'}>Use cases</Link></div>
-                    <div className='text-xl text-white mx-3 '><Link href={'/contact'}>Resouce</Link></div>
                 </div>
             </div>
             {user ? (
@@ -75,7 +74,6 @@ const Navbar = () => {
           </div>
           <div className='py-4 pt-0'>
             <div className='text-sm text-white mx-3 '><Link href={'/'}>Use cases</Link></div>
-            <div className='text-sm pt-1.5 text-white mx-3 '><Link href={'/about'}>Resouce</Link></div>
             {user ? (
               <div>
                 <div className='text-sm pt-1.5 text-white mx-3'><button onClick={settingPage}>Settings</button></div>
